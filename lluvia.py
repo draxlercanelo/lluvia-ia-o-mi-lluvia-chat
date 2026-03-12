@@ -16,7 +16,7 @@ client = Groq(api_key=groq_api_key)
 st.set_page_config(page_title="Lluvia", layout="wide")
 st.title("Lluvia – Elegancia, Dinamismo e Inteligencia")
 
-# Prompt de sistema mejorado
+# Prompt de sistema mejorado (dinámica, didáctica, elegante + presentación)
 if "messages" not in st.session_state:
     st.session_state.messages = [
         {
@@ -69,7 +69,7 @@ if uploaded_file is not None:
                 {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{img_str}"}}
             ]}
         ],
-        model="llama-3.2-vision-11b",  # Modelo de visión de Groq
+        model="llama-3.2-vision-11b",
         temperature=0.7,
         max_tokens=800,
     )
@@ -77,7 +77,7 @@ if uploaded_file is not None:
     st.session_state.messages.append({"role": "assistant", "content": response.choices[0].message.content})
     st.chat_message("assistant").markdown(response.choices[0].message.content)
 
-# Chat normal + generación de imágenes
+# Chat normal + generación de imágenes con Replicate
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -87,7 +87,6 @@ if prompt:
         placeholder = st.empty()
         full_response = ""
 
-        # Respuesta de texto con Groq
         stream = client.chat.completions.create(
             messages=st.session_state.messages,
             model="llama-3.3-70b-versatile",
@@ -126,6 +125,6 @@ if prompt:
                     else:
                         st.warning("No se pudo generar la imagen.")
                 except Exception as e:
-                    st.error(f"Error al generar imagen: {str(e)}. Verifica tu clave REPLICATE_API_TOKEN.")
+                    st.error(f"Error al generar imagen: {str(e)}. Verifica tu clave REPLICATE_API_TOKEN en Secrets.")
 
     st.session_state.messages.append({"role": "assistant", "content": full_response})
